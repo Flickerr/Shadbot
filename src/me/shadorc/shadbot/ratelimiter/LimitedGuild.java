@@ -16,21 +16,21 @@ public class LimitedGuild {
 	}
 
 	public LimitedUser getUser(IUser user) {
-		return limitedUsersMap.get(user.getLongID());
+		return this.limitedUsersMap.get(user.getLongID());
 	}
 
 	public void addUserIfAbsent(IUser user) {
-		limitedUsersMap.putIfAbsent(user.getLongID(), new LimitedUser());
+		this.limitedUsersMap.putIfAbsent(user.getLongID(), new LimitedUser());
 	}
 
 	public void scheduledDeletion(ScheduledThreadPoolExecutor scheduledExecutor, IUser user, int cooldown) {
-		ScheduledFuture<LimitedUser> deletionTask = limitedUsersMap.get(user.getLongID()).getDeletionTask();
+		ScheduledFuture<LimitedUser> deletionTask = this.limitedUsersMap.get(user.getLongID()).getDeletionTask();
 		if(deletionTask != null) {
 			deletionTask.cancel(false);
 		}
 
-		deletionTask = scheduledExecutor.schedule(() -> limitedUsersMap.remove(user.getLongID()), cooldown, TimeUnit.MILLISECONDS);
-		limitedUsersMap.get(user.getLongID()).setDeletionTask(deletionTask);
+		deletionTask = scheduledExecutor.schedule(() -> this.limitedUsersMap.remove(user.getLongID()), cooldown, TimeUnit.MILLISECONDS);
+		this.limitedUsersMap.get(user.getLongID()).setDeletionTask(deletionTask);
 	}
 
 }

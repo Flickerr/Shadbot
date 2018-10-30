@@ -30,12 +30,12 @@ public class LogBuilder {
 	}
 
 	public EmbedObject build() {
-		EmbedBuilder embed = EmbedUtils.getDefaultEmbed()
+		final EmbedBuilder embed = EmbedUtils.getDefaultEmbed()
 				.setLenient(true)
-				.withAuthorName(String.format("%s (Version: %s)", StringUtils.capitalize(type.toString()), Shadbot.VERSION))
-				.withDescription(message);
+				.withAuthorName(String.format("%s (Version: %s)", StringUtils.capitalize(this.type.toString()), Shadbot.VERSION))
+				.withDescription(this.message);
 
-		switch (type) {
+		switch (this.type) {
 			case ERROR:
 				embed.withColor(Color.RED);
 				break;
@@ -47,13 +47,13 @@ public class LogBuilder {
 				break;
 		}
 
-		if(err != null) {
-			embed.appendField("Error type", err.getClass().getSimpleName(), false);
-			embed.appendField("Error message", err.getMessage(), false);
+		if(this.err != null) {
+			embed.appendField("Error type", this.err.getClass().getSimpleName(), false);
+			embed.appendField("Error message", this.err.getMessage(), false);
 		}
 
-		if(input != null) {
-			embed.appendField("Input", input, false);
+		if(this.input != null) {
+			embed.appendField("Input", this.input, false);
 		}
 
 		return embed.build();

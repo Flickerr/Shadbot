@@ -26,7 +26,7 @@ public class BackwardCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException, IllegalCmdArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
@@ -41,12 +41,12 @@ public class BackwardCmd extends AbstractCommand {
 		if(num == null) {
 			try {
 				num = TimeUtils.parseTime(context.getArg());
-			} catch (IllegalArgumentException err) {
+			} catch (final IllegalArgumentException err) {
 				throw new IllegalCmdArgumentException(String.format("`%s` is not a valid number / time.", context.getArg()));
 			}
 		}
 
-		long newPosition = guildMusic.getScheduler().changePosition(-TimeUnit.SECONDS.toMillis(num));
+		final long newPosition = guildMusic.getScheduler().changePosition(-TimeUnit.SECONDS.toMillis(num));
 		BotUtils.sendMessage(String.format(Emoji.CHECK_MARK + " New position: **%s**", FormatUtils.formatShortDuration(newPosition)),
 				context.getChannel());
 	}

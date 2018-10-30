@@ -10,7 +10,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import me.shadorc.shadbot.core.command.CommandManager;
 import me.shadorc.shadbot.data.APIKeys;
 import me.shadorc.shadbot.data.APIKeys.APIKey;
-import me.shadorc.shadbot.data.DataManager;
 import me.shadorc.shadbot.listener.ReadyListener;
 import me.shadorc.shadbot.listener.ShardListener;
 import me.shadorc.shadbot.utils.LogUtils;
@@ -19,7 +18,6 @@ import me.shadorc.shadbot.utils.executor.ShadbotCachedExecutor;
 import me.shadorc.shadbot.utils.executor.ShadbotScheduledExecutor;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.handle.obj.StatusType;
 
 public class Shadbot {
 
@@ -31,10 +29,10 @@ public class Shadbot {
 	private static IDiscordClient client;
 
 	static {
-		Properties properties = new Properties();
+		final Properties properties = new Properties();
 		try (InputStream inStream = Shadbot.class.getClassLoader().getResourceAsStream("project.properties")) {
 			properties.load(inStream);
-		} catch (IOException err) {
+		} catch (final IOException err) {
 			LogUtils.error(err, "An error occurred while getting version.");
 		}
 		VERSION = properties.getProperty("version");
@@ -43,25 +41,21 @@ public class Shadbot {
 	public static void main(String[] args) {
 		Locale.setDefault(new Locale("en", "US"));
 
-		// Initialization
-		if(!DataManager.init() || !CommandManager.init()) {
+		try {
+			APIKeys.init();
+		} catch (final IOException e) {
+			LogUtils.error(e, "An error occurred while initializing API keys, exiting.");
 			System.exit(1);
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				DataManager.stop();
-			}
-		});
+		// Initialization
+		if(!CommandManager.init()) {
+			System.exit(1);
+		}
 
 		client = new ClientBuilder()
 				.withToken(APIKeys.get(APIKey.DISCORD_TOKEN))
 				.withRecommendedShardCount()
-				.withPingTimeout(10)
-				.setMaxReconnectAttempts(10)
-				.setMaxMessageCacheCount(100)
-				.setPresence(StatusType.IDLE)
 				.build();
 
 		LogUtils.infof("Connecting to %s...", StringUtils.pluralOf(client.getShardCount(), "shard"));

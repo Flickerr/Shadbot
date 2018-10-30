@@ -22,14 +22,14 @@ public class PauseCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
 			return;
 		}
 
-		AudioPlayer audioPlayer = guildMusic.getScheduler().getAudioPlayer();
+		final AudioPlayer audioPlayer = guildMusic.getScheduler().getAudioPlayer();
 		audioPlayer.setPaused(!audioPlayer.isPaused());
 		if(audioPlayer.isPaused()) {
 			BotUtils.sendMessage(String.format(Emoji.PAUSE + " Music paused by **%s**.", context.getAuthorName()), context.getChannel());

@@ -4,9 +4,7 @@ import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 import me.shadorc.shadbot.Config;
-import me.shadorc.shadbot.command.admin.setting.core.SettingEnum;
 import me.shadorc.shadbot.utils.object.Emoji;
-import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.handle.obj.Permissions;
 
 public class TextUtils {
@@ -25,31 +23,12 @@ public class TextUtils {
 			"I'm not going anywhere, no need to be this fast.",
 			"I don't think everyone here want to be spammed by us, just wait a little bit." };
 
-	private static final String[] TIPS_MESSAGES = { String.format("Check %slotto", Config.DEFAULT_PREFIX),
-			String.format("Add a music first using %splayfirst", Config.DEFAULT_PREFIX),
-			String.format("Help me keep Shadbot alive ! %s", Config.PATREON_URL),
-			String.format("Support server: %s", Config.SUPPORT_SERVER) };
-
 	public static String getSpamMessage() {
 		return SPAM_MESSAGES[ThreadLocalRandom.current().nextInt(SPAM_MESSAGES.length)];
 	}
 
-	public static String getTip() {
-		return TIPS_MESSAGES[ThreadLocalRandom.current().nextInt(TIPS_MESSAGES.length)];
-	}
-
-	public static String notEnoughCoins(IUser user) {
-		return String.format(Emoji.BANK + " (**%s**) You don't have enough coins. You can get some by playing **RPS**, **Hangman** "
-				+ "or **Trivia**.", user.getName());
-	}
-
 	public static String noResult(String search) {
 		return String.format(Emoji.MAGNIFYING_GLASS + " No results for `%s`.", search);
-	}
-
-	public static String mustBeNSFW(String prefix) {
-		return String.format(Emoji.GREY_EXCLAMATION + " This must be a NSFW-channel. If you're an admin, you can use `%ssetting %s enable`",
-				prefix, SettingEnum.NSFW);
 	}
 
 	public static String missingPerm(EnumSet<Permissions> permissions) {

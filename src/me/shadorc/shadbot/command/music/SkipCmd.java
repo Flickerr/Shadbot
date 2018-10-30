@@ -21,7 +21,7 @@ public class SkipCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException, IllegalCmdArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
@@ -29,7 +29,7 @@ public class SkipCmd extends AbstractCommand {
 		}
 
 		if(context.hasArg()) {
-			Integer num = CastUtils.asIntBetween(context.getArg(), 1, guildMusic.getScheduler().getPlaylist().size());
+			final Integer num = CastUtils.asIntBetween(context.getArg(), 1, guildMusic.getScheduler().getPlaylist().size());
 			if(num == null) {
 				throw new IllegalCmdArgumentException(String.format("Number must be between 1 and %d.",
 						guildMusic.getScheduler().getPlaylist().size()));

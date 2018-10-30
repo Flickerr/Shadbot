@@ -18,7 +18,6 @@ import sx.blah.discord.handle.obj.IUser;
 public class RateLimiter {
 
 	public static final int DEFAULT_COOLDOWN = 5;
-	public static final int GAME_COOLDOWN = 5;
 
 	private final ScheduledThreadPoolExecutor scheduledExecutor;
 	private final ConcurrentHashMap<Long, LimitedGuild> guildsLimitedMap;
@@ -33,23 +32,23 @@ public class RateLimiter {
 	}
 
 	public boolean isLimited(IChannel channel, IUser user) {
-		guildsLimitedMap.putIfAbsent(channel.getGuild().getLongID(), new LimitedGuild());
+		this.guildsLimitedMap.putIfAbsent(channel.getGuild().getLongID(), new LimitedGuild());
 
-		LimitedGuild limitedGuild = guildsLimitedMap.get(channel.getGuild().getLongID());
+		final LimitedGuild limitedGuild = this.guildsLimitedMap.get(channel.getGuild().getLongID());
 		limitedGuild.addUserIfAbsent(user);
 
-		LimitedUser limitedUser = limitedGuild.getUser(user);
+		final LimitedUser limitedUser = limitedGuild.getUser(user);
 		limitedUser.increment();
 
 		// The user has not exceeded the limit yet, he is not limited
-		if(limitedUser.getCount() <= max) {
-			limitedGuild.scheduledDeletion(scheduledExecutor, user, cooldown);
+		if(limitedUser.getCount() <= this.max) {
+			limitedGuild.scheduledDeletion(this.scheduledExecutor, user, this.cooldown);
 			return false;
 		}
 
 		// The user has exceeded the limit, he's warned and limited
-		if(limitedUser.getCount() == max + 1) {
-			limitedGuild.scheduledDeletion(scheduledExecutor, user, cooldown);
+		if(limitedUser.getCount() == this.max + 1) {
+			limitedGuild.scheduledDeletion(this.scheduledExecutor, user, this.cooldown);
 			this.warn(channel, user);
 			return true;
 		}
@@ -62,8 +61,8 @@ public class RateLimiter {
 		BotUtils.sendMessage(String.format(Emoji.STOPWATCH + " (**%s**) %s You can use this command %s every *%s*.",
 				user.getName(),
 				TextUtils.getSpamMessage(),
-				StringUtils.pluralOf(max, "time"),
-				DurationFormatUtils.formatDurationWords(cooldown, true, true)), channel);
+				StringUtils.pluralOf(this.max, "time"),
+				DurationFormatUtils.formatDurationWords(this.cooldown, true, true)), channel);
 	}
 
 }

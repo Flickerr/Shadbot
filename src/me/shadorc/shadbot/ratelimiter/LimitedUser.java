@@ -12,7 +12,7 @@ public class LimitedUser {
 	}
 
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	public ScheduledFuture<LimitedUser> getDeletionTask() {

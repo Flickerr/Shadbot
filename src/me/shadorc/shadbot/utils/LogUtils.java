@@ -38,7 +38,7 @@ public class LogUtils {
 	}
 
 	private static void sendLog(LogBuilder embed) {
-		IDiscordClient client = Shadbot.getClient();
+		final IDiscordClient client = Shadbot.getClient();
 		if(client != null && client.isLoggedIn()) {
 			BotUtils.sendMessage(embed.build(), client.getChannelByID(Config.LOGS_CHANNEL_ID));
 		}

@@ -10,9 +10,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import me.shadorc.shadbot.data.stats.VariousStatsManager;
-import me.shadorc.shadbot.data.stats.VariousStatsManager.VariousEnum;
-
 public class TrackScheduler {
 
 	private final AudioPlayer audioPlayer;
@@ -32,29 +29,27 @@ public class TrackScheduler {
 	 * @return true if the music has been started, false if it was added to the queue
 	 */
 	public boolean startOrQueue(AudioTrack track, boolean first) {
-		VariousStatsManager.log(VariousEnum.MUSICS_LOADED);
-
 		// The track has been started
-		if(audioPlayer.startTrack(track.makeClone(), true)) {
+		if(this.audioPlayer.startTrack(track.makeClone(), true)) {
 			this.currentTrack = track;
 			return true;
 		} else if(first) {
-			queue.offerFirst(track);
+			this.queue.offerFirst(track);
 		} else {
-			queue.offerLast(track);
+			this.queue.offerLast(track);
 		}
 		return false;
 	}
 
 	public boolean nextTrack() {
-		switch (repeatMode) {
+		switch (this.repeatMode) {
 			case PLAYLIST:
-				queue.offer(currentTrack.makeClone());
+				this.queue.offer(this.currentTrack.makeClone());
 			case NONE:
-				this.currentTrack = queue.poll();
-				return audioPlayer.startTrack(currentTrack, false);
+				this.currentTrack = this.queue.poll();
+				return this.audioPlayer.startTrack(this.currentTrack, false);
 			case SONG:
-				audioPlayer.playTrack(currentTrack.makeClone());
+				this.audioPlayer.playTrack(this.currentTrack.makeClone());
 				break;
 		}
 		return true;
@@ -63,52 +58,52 @@ public class TrackScheduler {
 	public void skipTo(int num) {
 		AudioTrack track = null;
 		for(int i = 0; i < num; i++) {
-			track = queue.poll();
+			track = this.queue.poll();
 		}
-		audioPlayer.playTrack(track.makeClone());
+		this.audioPlayer.playTrack(track.makeClone());
 		this.currentTrack = track;
 	}
 
 	public long changePosition(long time) {
-		long newPosition = audioPlayer.getPlayingTrack().getPosition() + time;
-		newPosition = Math.max(0, Math.min(audioPlayer.getPlayingTrack().getDuration(), newPosition));
-		audioPlayer.getPlayingTrack().setPosition(newPosition);
+		long newPosition = this.audioPlayer.getPlayingTrack().getPosition() + time;
+		newPosition = Math.max(0, Math.min(this.audioPlayer.getPlayingTrack().getDuration(), newPosition));
+		this.audioPlayer.getPlayingTrack().setPosition(newPosition);
 		return newPosition;
 	}
 
 	public void shufflePlaylist() {
-		List<AudioTrack> tempList = new ArrayList<>(queue);
+		final List<AudioTrack> tempList = new ArrayList<>(this.queue);
 		Collections.shuffle(tempList);
-		queue.clear();
-		queue.addAll(tempList);
+		this.queue.clear();
+		this.queue.addAll(tempList);
 	}
 
 	public void clearPlaylist() {
-		queue.clear();
+		this.queue.clear();
 	}
 
 	public BlockingQueue<AudioTrack> getPlaylist() {
-		return queue;
+		return this.queue;
 	}
 
 	public AudioPlayer getAudioPlayer() {
-		return audioPlayer;
+		return this.audioPlayer;
 	}
 
 	public RepeatMode getRepeatMode() {
-		return repeatMode;
+		return this.repeatMode;
 	}
 
 	public boolean isPlaying() {
-		return audioPlayer.getPlayingTrack() != null;
+		return this.audioPlayer.getPlayingTrack() != null;
 	}
 
 	public boolean isStopped() {
-		return queue.isEmpty() && !this.isPlaying();
+		return this.queue.isEmpty() && !this.isPlaying();
 	}
 
 	public void setVolume(int volume) {
-		audioPlayer.setVolume(Math.max(0, Math.min(100, volume)));
+		this.audioPlayer.setVolume(Math.max(0, Math.min(100, volume)));
 	}
 
 	public void setRepeatMode(RepeatMode repeatMode) {

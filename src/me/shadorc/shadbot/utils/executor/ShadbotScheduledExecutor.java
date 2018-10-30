@@ -40,16 +40,13 @@ public class ShadbotScheduledExecutor extends ScheduledThreadPoolExecutor {
 	}
 
 	private Runnable wrapRunnable(Runnable command) {
-		return new Runnable() {
-			@Override
-			public void run() {
-				try {
-					command.run();
-				} catch (Exception err) {
-					LogUtils.error(err, String.format("{%s} An unknown exception occurred while running a scheduled task.",
-							ShadbotScheduledExecutor.class.getSimpleName()));
-					throw new RuntimeException(err);
-				}
+		return () -> {
+			try {
+				command.run();
+			} catch (final Exception err) {
+				LogUtils.error(err, String.format("{%s} An unknown exception occurred while running a scheduled task.",
+						ShadbotScheduledExecutor.class.getSimpleName()));
+				throw new RuntimeException(err);
 			}
 		};
 	}

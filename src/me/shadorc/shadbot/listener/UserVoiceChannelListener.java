@@ -41,12 +41,12 @@ public class UserVoiceChannelListener {
 	}
 
 	private synchronized void check(IGuild guild) {
-		IVoiceChannel botVoiceChannel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
+		final IVoiceChannel botVoiceChannel = guild.getClient().getOurUser().getVoiceStateForGuild(guild).getChannel();
 		if(botVoiceChannel == null) {
 			return;
 		}
 
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(guild.getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(guild.getLongID());
 		if(guildMusic == null) {
 			return;
 		}

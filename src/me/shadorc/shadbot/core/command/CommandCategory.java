@@ -2,18 +2,7 @@ package me.shadorc.shadbot.core.command;
 
 public enum CommandCategory {
 
-	HIDDEN("Hidden"),
-	UTILS("Utility"),
-	FUN("Fun"),
-	IMAGE("Image"),
-	GAME("Game"),
-	CURRENCY("Currency"),
-	MUSIC("Music"),
-	GAMESTATS("Game Stats"),
-	INFO("Info"),
-	FRENCH("French"),
-	ADMIN("Admin"),
-	OWNER("Owner");
+	MUSIC("Music");
 
 	private final String name;
 

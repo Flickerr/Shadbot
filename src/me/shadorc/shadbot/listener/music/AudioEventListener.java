@@ -30,52 +30,52 @@ public class AudioEventListener extends AudioEventAdapter {
 	@Override
 	public void onTrackStart(AudioPlayer player, AudioTrack track) {
 		BotUtils.sendMessage(String.format(Emoji.MUSICAL_NOTE + " Currently playing: **%s**", FormatUtils.formatTrackName(track.getInfo())),
-				guildMusic.getChannel());
+				this.guildMusic.getChannel());
 	}
 
 	@Override
 	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
 		if(endReason.mayStartNext) {
-			errorCount = 0; // Everything seems to be fine, reset error count.
-			if(!guildMusic.getScheduler().nextTrack()) {
-				guildMusic.end();
+			this.errorCount = 0; // Everything seems to be fine, reset error count.
+			if(!this.guildMusic.getScheduler().nextTrack()) {
+				this.guildMusic.end();
 			}
 		}
 	}
 
 	@Override
 	public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException err) {
-		errorCount++;
+		this.errorCount++;
 
-		String errMessage = Jsoup.parse(StringUtils.remove(err.getMessage(), "Watch on YouTube")).text().trim();
+		final String errMessage = Jsoup.parse(StringUtils.remove(err.getMessage(), "Watch on YouTube")).text().trim();
 
-		if(errorCount <= 3) {
+		if(this.errorCount <= 3) {
 			BotUtils.sendMessage(String.format(Emoji.RED_CROSS + " Sorry, %s. I'll try to play the next available song.",
-					errMessage.toLowerCase()), guildMusic.getChannel());
+					errMessage.toLowerCase()), this.guildMusic.getChannel());
 		}
 
-		if(errorCount == 3) {
+		if(this.errorCount == 3) {
 			BotUtils.sendMessage(Emoji.RED_FLAG + " Too many errors in a row, I will ignore them until finding a music that can be played.",
-					guildMusic.getChannel());
+					this.guildMusic.getChannel());
 			LogUtils.infof("{Guild ID: %d} Too many errors in a row. They will be ignored until music can be played.",
-					guildMusic.getChannel().getGuild().getLongID());
+					this.guildMusic.getChannel().getGuild().getLongID());
 		}
 
 		LogUtils.infof("{Guild ID: %d} %sTrack exception: %s",
-				guildMusic.getChannel().getGuild().getLongID(), errorCount > 3 ? "(Ignored) " : "", errMessage);
+				this.guildMusic.getChannel().getGuild().getLongID(), this.errorCount > 3 ? "(Ignored) " : "", errMessage);
 
-		if(!guildMusic.getScheduler().nextTrack()) {
-			guildMusic.end();
+		if(!this.guildMusic.getScheduler().nextTrack()) {
+			this.guildMusic.end();
 		}
 	}
 
 	@Override
 	public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-		BotUtils.sendMessage(Emoji.RED_EXCLAMATION + " Music seems stuck, I'll try to play the next available song.", guildMusic.getChannel());
-		LogUtils.warnf("{Guild ID: %d} Music stuck, skipping it.", guildMusic.getChannel().getGuild().getLongID());
+		BotUtils.sendMessage(Emoji.RED_EXCLAMATION + " Music seems stuck, I'll try to play the next available song.", this.guildMusic.getChannel());
+		LogUtils.warnf("{Guild ID: %d} Music stuck, skipping it.", this.guildMusic.getChannel().getGuild().getLongID());
 
-		if(!guildMusic.getScheduler().nextTrack()) {
-			guildMusic.end();
+		if(!this.guildMusic.getScheduler().nextTrack()) {
+			this.guildMusic.end();
 		}
 	}
 }

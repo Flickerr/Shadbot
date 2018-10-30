@@ -23,21 +23,21 @@ public class VolumeCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException, IllegalCmdArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
 			return;
 		}
 
-		TrackScheduler scheduler = guildMusic.getScheduler();
+		final TrackScheduler scheduler = guildMusic.getScheduler();
 		if(!context.hasArg()) {
 			BotUtils.sendMessage(String.format(Emoji.SOUND + " Current volume level: **%d%%**", scheduler.getAudioPlayer().getVolume()),
 					context.getChannel());
 			return;
 		}
 
-		Integer volume = CastUtils.asPositiveInt(context.getArg());
+		final Integer volume = CastUtils.asPositiveInt(context.getArg());
 		if(volume == null) {
 			throw new IllegalCmdArgumentException(String.format("`%s` is not a valid volume.", context.getArg()));
 		}

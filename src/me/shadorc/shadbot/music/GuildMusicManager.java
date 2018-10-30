@@ -18,7 +18,7 @@ public class GuildMusicManager {
 	}
 
 	public static GuildMusic createGuildMusic(IGuild guild) {
-		GuildMusic guildMusic = new GuildMusic(guild, PLAYER_MANAGER);
+		final GuildMusic guildMusic = new GuildMusic(guild, PLAYER_MANAGER);
 		GUILD_MUSIC_MAP.put(guild.getLongID(), guildMusic);
 
 		guild.getAudioManager().setAudioProvider(guildMusic.getAudioProvider());

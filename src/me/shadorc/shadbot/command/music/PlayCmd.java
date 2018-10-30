@@ -6,7 +6,6 @@ import me.shadorc.shadbot.core.command.CommandCategory;
 import me.shadorc.shadbot.core.command.Context;
 import me.shadorc.shadbot.core.command.annotation.Command;
 import me.shadorc.shadbot.core.command.annotation.RateLimited;
-import me.shadorc.shadbot.data.premium.PremiumManager;
 import me.shadorc.shadbot.exception.IllegalCmdArgumentException;
 import me.shadorc.shadbot.exception.MissingArgumentException;
 import me.shadorc.shadbot.listener.music.AudioLoadResultListener;
@@ -33,8 +32,8 @@ public class PlayCmd extends AbstractCommand {
 			throw new MissingArgumentException();
 		}
 
-		IVoiceChannel botVoiceChannel = context.getClient().getOurUser().getVoiceStateForGuild(context.getGuild()).getChannel();
-		IVoiceChannel userVoiceChannel = context.getAuthor().getVoiceStateForGuild(context.getGuild()).getChannel();
+		final IVoiceChannel botVoiceChannel = context.getClient().getOurUser().getVoiceStateForGuild(context.getGuild()).getChannel();
+		final IVoiceChannel userVoiceChannel = context.getAuthor().getVoiceStateForGuild(context.getGuild()).getChannel();
 
 		if(botVoiceChannel != null && !botVoiceChannel.equals(userVoiceChannel)) {
 			throw new IllegalCmdArgumentException(String.format("I'm currently playing music in voice channel %s"
@@ -79,15 +78,13 @@ public class PlayCmd extends AbstractCommand {
 			guildMusic = GuildMusicManager.createGuildMusic(context.getGuild());
 		}
 
-		if(guildMusic.getScheduler().getPlaylist().size() >= Config.MAX_PLAYLIST_SIZE - 1
-				&& !PremiumManager.isPremium(context.getGuild(), context.getAuthor())) {
-			BotUtils.sendMessage(TextUtils.PLAYLIST_LIMIT_REACHED, context.getChannel());
+		if(guildMusic.getScheduler().getPlaylist().size() >= Config.MAX_PLAYLIST_SIZE - 1) {
 			return;
 		}
 
 		guildMusic.setChannel(context.getChannel());
 
-		AudioLoadResultListener resultListener = new AudioLoadResultListener(
+		final AudioLoadResultListener resultListener = new AudioLoadResultListener(
 				guildMusic, context.getAuthor(), userVoiceChannel, identifier, context.getCommandName().endsWith("first"));
 		GuildMusicManager.PLAYER_MANAGER.loadItemOrdered(guildMusic, identifier, resultListener);
 	}

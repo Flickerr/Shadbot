@@ -27,14 +27,14 @@ public class PlaylistCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
 			return;
 		}
 
-		EmbedBuilder embed = EmbedUtils.getDefaultEmbed()
+		final EmbedBuilder embed = EmbedUtils.getDefaultEmbed()
 				.withAuthorName("Playlist")
 				.withThumbnail("http://icons.iconarchive.com/icons/dtafalonso/yosemite-flat/512/Music-icon.png")
 				.appendDescription(this.formatPlaylist(guildMusic.getScheduler().getPlaylist()));
@@ -46,11 +46,11 @@ public class PlaylistCmd extends AbstractCommand {
 			return "**The playlist is empty.**";
 		}
 
-		StringBuilder playlist = new StringBuilder(String.format("**%s in the playlist:**\n", StringUtils.pluralOf(queue.size(), "music")));
+		final StringBuilder playlist = new StringBuilder(String.format("**%s in the playlist:**\n", StringUtils.pluralOf(queue.size(), "music")));
 
 		int count = 1;
-		for(AudioTrack track : queue) {
-			String name = String.format("%n\t**%d.** %s", count, FormatUtils.formatTrackName(track.getInfo()));
+		for(final AudioTrack track : queue) {
+			final String name = String.format("%n\t**%d.** %s", count, FormatUtils.formatTrackName(track.getInfo()));
 			if(playlist.length() + name.length() < 1800) {
 				playlist.append(name);
 			} else {

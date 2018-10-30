@@ -21,7 +21,7 @@ public class VoiceChannelListener {
 	}
 
 	private void onVoiceDisconnectedEvent(VoiceDisconnectedEvent event) {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(event.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(event.getGuild().getLongID());
 		if(guildMusic != null) {
 			guildMusic.delete();
 			LogUtils.infof("{Guild ID: %d} Voice channel left.", event.getGuild().getLongID());

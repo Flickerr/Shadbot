@@ -17,21 +17,21 @@ public class AudioProvider implements IAudioProvider {
 
 	@Override
 	public boolean isReady() {
-		if(lastFrame == null) {
-			lastFrame = audioPlayer.provide();
+		if(this.lastFrame == null) {
+			this.lastFrame = this.audioPlayer.provide();
 		}
 
-		return lastFrame != null;
+		return this.lastFrame != null;
 	}
 
 	@Override
 	public byte[] provide() {
-		if(lastFrame == null) {
-			lastFrame = audioPlayer.provide();
+		if(this.lastFrame == null) {
+			this.lastFrame = this.audioPlayer.provide();
 		}
 
-		byte[] data = lastFrame == null ? null : lastFrame.data;
-		lastFrame = null;
+		final byte[] data = this.lastFrame == null ? null : this.lastFrame.data;
+		this.lastFrame = null;
 
 		return data;
 	}

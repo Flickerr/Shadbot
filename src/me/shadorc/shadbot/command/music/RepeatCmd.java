@@ -23,7 +23,7 @@ public class RepeatCmd extends AbstractCommand {
 
 	@Override
 	public void execute(Context context) throws MissingArgumentException {
-		GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
+		final GuildMusic guildMusic = GuildMusicManager.GUILD_MUSIC_MAP.get(context.getGuild().getLongID());
 
 		if(guildMusic == null || guildMusic.getScheduler().isStopped()) {
 			BotUtils.sendMessage(TextUtils.NO_PLAYING_MUSIC, context.getChannel());
@@ -41,7 +41,7 @@ public class RepeatCmd extends AbstractCommand {
 			mode = RepeatMode.SONG;
 		}
 
-		TrackScheduler scheduler = guildMusic.getScheduler();
+		final TrackScheduler scheduler = guildMusic.getScheduler();
 
 		scheduler.setRepeatMode(scheduler.getRepeatMode().equals(mode) ? RepeatMode.NONE : mode);
 		BotUtils.sendMessage(String.format("%s %sRepetition %s",

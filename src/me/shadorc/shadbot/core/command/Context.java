@@ -24,37 +24,37 @@ public class Context {
 		this.message = message;
 		this.prefix = prefix;
 
-		List<String> splittedMsg = StringUtils.split(message.getContent(), 2);
+		final List<String> splittedMsg = StringUtils.split(message.getContent(), 2);
 		this.cmdName = splittedMsg.get(0).substring(prefix.length()).toLowerCase();
 		this.arg = splittedMsg.size() > 1 ? splittedMsg.get(1) : "";
 	}
 
 	public IMessage getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public String getContent() {
-		return message.getContent();
+		return this.message.getContent();
 	}
 
 	public String getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	public String getCommandName() {
-		return cmdName;
+		return this.cmdName;
 	}
 
 	public String getArg() {
-		return arg;
+		return this.arg;
 	}
 
 	public IDiscordClient getClient() {
-		return message.getClient();
+		return this.message.getClient();
 	}
 
 	public IUser getOurUser() {
-		return message.getClient().getOurUser();
+		return this.message.getClient().getOurUser();
 	}
 
 	public ShadbotShard getShadbotShard() {
@@ -62,19 +62,19 @@ public class Context {
 	}
 
 	public IShard getShard() {
-		return message.getShard();
+		return this.message.getShard();
 	}
 
 	public IGuild getGuild() {
-		return message.getGuild();
+		return this.message.getGuild();
 	}
 
 	public IChannel getChannel() {
-		return message.getChannel();
+		return this.message.getChannel();
 	}
 
 	public IUser getAuthor() {
-		return message.getAuthor();
+		return this.message.getAuthor();
 	}
 
 	public String getAuthorName() {
@@ -94,6 +94,6 @@ public class Context {
 	}
 
 	public boolean hasArg() {
-		return !arg.isEmpty();
+		return !this.arg.isEmpty();
 	}
 }

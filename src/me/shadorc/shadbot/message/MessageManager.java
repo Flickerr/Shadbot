@@ -18,7 +18,7 @@ public class MessageManager {
 	}
 
 	public static void removeListener(IChannel channel, MessageListener listener) {
-		List<MessageListener> list = CHANNELS_LISTENERS.get(channel.getLongID());
+		final List<MessageListener> list = CHANNELS_LISTENERS.get(channel.getLongID());
 		if(list != null) {
 			list.remove(listener);
 			if(list.isEmpty()) {
@@ -32,7 +32,7 @@ public class MessageManager {
 	 * @return true if the message has been intercepted, false otherwise
 	 */
 	public static boolean intercept(IMessage message) {
-		List<MessageListener> listeners = CHANNELS_LISTENERS.get(message.getChannel().getLongID());
+		final List<MessageListener> listeners = CHANNELS_LISTENERS.get(message.getChannel().getLongID());
 		if(listeners == null) {
 			return false;
 		}
